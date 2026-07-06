@@ -1,30 +1,29 @@
-# Contributing
+# Contributing / 贡献说明
 
-Thanks for helping improve Chuo's Content OS.
+感谢你改进这套内容 OS。
 
-This project has one non-negotiable contribution rule: examples must be fictional.
+本项目最重要的规则：**只能提交结构、模板、工具和虚构示例，不能提交真实内容资产。**
 
-## Privacy checklist
+## 隐私检查
 
-Before opening a pull request, confirm that your change does not include:
+提交前确认没有包含：
 
-- Real drafts, scripts, posts, articles, transcripts, or screenshots
-- Real account names, URLs, handles, comments, or platform data
-- Real benchmark accounts or competitor intelligence
-- Real performance numbers from a private project
-- Real rubric weights derived from private calibration
-- API keys, cookies, sessions, `.env`, or databases
+- 真实草稿、文章、帖子、逐字稿
+- 真实账号名、URL、评论、截图
+- 真实播放量、阅读量、点赞、转发、转化数据
+- 真实对标账号或竞品情报
+- 真实 audience / benchmark / persona
+- 私有 rubric 权重和长期复盘结论
+- API key、cookie、session、`.env`、数据库
 
-If a realistic example is needed, invent one and mark it as fake.
+如果需要示例，请虚构，并明确标注为 fake / 虚构。
 
-## Development
-
-The CLI is intentionally dependency-free.
+## 开发检查
 
 ```bash
-python tools/content_os.py --help
-python tools/content_os.py scan-public .
+python "06-系统引擎-system-engine/工具-tools/content_os.py" --help
+python "06-系统引擎-system-engine/工具-tools/content_os.py" scan-public .
 ```
 
-Prefer small, plain Markdown templates over heavy automation. The system should stay inspectable by creators who do not write code.
+CLI 尽量保持无依赖，方便非工程用户直接使用。
 
