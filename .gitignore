@@ -28,7 +28,9 @@ data/
 .auth-*/
 .content-os-secrets.json
 *.cookies
-*session*
+*.session
+session.json
+session/
 
 # Databases and generated data
 *.db
@@ -54,4 +56,3 @@ Thumbs.db
 *~
 *.tmp
 *.log
-

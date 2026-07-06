@@ -20,6 +20,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Iterable
+from urllib.parse import urlparse
 
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -541,9 +542,12 @@ def cmd_status(args: argparse.Namespace) -> int:
     return 0
 
 
-SENSITIVE_VALUE_PATTERNS = [
-    re.compile(r"(?i)(api[_-]?key|secret|token|cookie|session|password)[ \t]*[:=][ \t]*['\"]?[A-Za-z0-9_\-./+=]{12,}"),
-    re.compile(r"(?i)authorization[ \t]*[:=][ \t]*['\"]?bearer[ \t]+[A-Za-z0-9_\-./+=]{12,}"),
+SENSITIVE_ASSIGNMENT = re.compile(
+    r"(?i)^\s*([A-Za-z0-9_.-]*(?:api[_-]?key|secret|token|cookie|session|password)[A-Za-z0-9_.-]*)"
+    r"\s*[:=]\s*(.+?)\s*(?:#.*)?$"
+)
+SENSITIVE_INLINE_PATTERNS = [
+    re.compile(r"(?i)authorization[ \t]*[:=][ \t]*['\"]?bearer[ \t]+[A-Za-z0-9_\-./+=]{20,}"),
     re.compile(r"sk-[A-Za-z0-9]{20,}"),
 ]
 
@@ -554,6 +558,33 @@ PRIVATE_FILE_PATTERNS = [
 ]
 
 SKIP_DIRS = {".git", ".obsidian", "__pycache__", ".venv", "venv", ".content-os-cache"}
+
+PRIVATE_FILE_NAME_ALLOWLIST = {
+    "session-start.json",
+    "session-start.sh",
+}
+
+DEFAULT_PUBLIC_URL_DOMAINS = {
+    "example.com",
+    "json-schema.org",
+    "github.com",
+    "huggingface.co",
+    "news.ycombinator.com",
+    "api.bilibili.com",
+    "www.bilibili.com",
+    "b23.tv",
+    "creator.douyin.com",
+    "www.douyin.com",
+    "v.douyin.com",
+    "creator.xiaohongshu.com",
+    "www.xiaohongshu.com",
+    "xhslink.com",
+    "www.linkedin.com",
+    "s.weibo.com",
+    "weibo.com",
+    "www.zhihu.com",
+    "aihot.virxact.com",
+}
 
 
 def should_skip(path: Path) -> bool:
@@ -569,10 +600,39 @@ def read_maybe_text(path: Path) -> str | None:
         return None
 
 
+def is_secret_assignment(line: str) -> bool:
+    match = SENSITIVE_ASSIGNMENT.match(line)
+    if not match:
+        return False
+    value = match.group(2).strip().rstrip(",")
+    value = value.strip("\"'")
+
+    if not value or value in {"...", "<redacted>", "REDACTED", "CHANGE_ME", "your-token-here"}:
+        return False
+    if value.startswith(("{", "$", "%", "os.", "env.", "Path(")):
+        return False
+    if any(ch in value for ch in "{}()<>"):
+        return False
+    return bool(re.fullmatch(r"[A-Za-z0-9_\-./+=]{20,}", value))
+
+
+def is_public_url_allowed(url: str, allow_domains: set[str], strict_urls: bool) -> bool:
+    if strict_urls:
+        return "example.com" in url or "json-schema.org" in url
+    if any(marker in url for marker in ("...", "<", ">", "{", "}")):
+        return True
+    host = urlparse(url).netloc.lower()
+    if not host:
+        return True
+    return host in allow_domains or any(host.endswith("." + domain) for domain in allow_domains)
+
+
 def cmd_scan_public(args: argparse.Namespace) -> int:
     root = project_path(args.path)
     warnings: list[str] = []
     custom_terms = [term for term in (args.term or []) if term]
+    allow_domains = set(DEFAULT_PUBLIC_URL_DOMAINS)
+    allow_domains.update(domain.lower() for domain in (args.allow_url_domain or []) if domain)
 
     for path in sorted(root.rglob("*")):
         if should_skip(path.relative_to(root)):
@@ -582,6 +642,8 @@ def cmd_scan_public(args: argparse.Namespace) -> int:
         rel = path.relative_to(root).as_posix()
 
         for pattern in PRIVATE_FILE_PATTERNS:
+            if path.name in PRIVATE_FILE_NAME_ALLOWLIST:
+                continue
             if pattern.search(path.name) and path.name != ".env.example":
                 warnings.append(f"{rel}: suspicious private file name")
 
@@ -592,13 +654,16 @@ def cmd_scan_public(args: argparse.Namespace) -> int:
                 warnings.append(f"{rel}: binary asset; manually verify it is not private")
             continue
 
-        for pattern in SENSITIVE_VALUE_PATTERNS:
+        for pattern in SENSITIVE_INLINE_PATTERNS:
             if pattern.search(text):
                 warnings.append(f"{rel}: possible secret value")
+        for line_no, line in enumerate(text.splitlines(), start=1):
+            if is_secret_assignment(line):
+                warnings.append(f"{rel}:{line_no}: possible secret value")
 
         for match in re.finditer(r"https?://[^\s)>\"]+", text):
             url = match.group(0)
-            if "example.com" not in url and "json-schema.org" not in url:
+            if not is_public_url_allowed(url, allow_domains, args.strict_urls):
                 warnings.append(f"{rel}: non-example URL {url}")
 
         for term in custom_terms:
@@ -680,6 +745,8 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("scan-public", help="扫描公开仓库里的疑似隐私内容")
     p.add_argument("path")
     p.add_argument("--term", action="append", help="custom sensitive term to search for")
+    p.add_argument("--allow-url-domain", action="append", help="public URL domain allowed in docs or adapters")
+    p.add_argument("--strict-urls", action="store_true", help="flag every non-example URL")
     p.add_argument("--warn-only", action="store_true")
     p.set_defaults(func=cmd_scan_public)
 

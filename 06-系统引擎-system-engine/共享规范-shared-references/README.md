@@ -1,17 +1,18 @@
 # 共享规范
 
-这里放跨工具、跨模板共享的协议。
+这里放跨工具、跨模板、跨 skill 共享的协议。公开版已经接入:
 
-当前包含：
-
+- `blind-prediction-protocol.md`
+- `prediction-anatomy.md`
+- `state-management.md`
+- `candidate-schema.md`
+- `data-source-routing.md`
+- `cadence-protocol.md`
+- `observation-lifecycle.md`
+- `bump-validation-protocol.md`
+- `migration-protocol.md`
 - `schemas/state.schema.json`
 - `schemas/candidate.schema.json`
 - `schemas/prediction.schema.json`
 
-后续可以加入：
-
-- 盲预测协议
-- 复盘协议
-- rubric 升级协议
-- adapter 输出协议
-
+这些文件定义 workflow 契约, 不存放真实内容数据。
