@@ -1,0 +1,34 @@
+# Secrets
+.env
+.env.*
+.content-os-secrets.json
+.auth/
+.auth-*/
+*.cookies
+*session*
+
+# Local cache
+.content-os-cache/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Raw exports and screenshots
+exports/
+screenshots/
+downloads/
+raw-materials/
+*.db
+*.sqlite
+*.sqlite3
+*.jsonl
+
+# Editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.tmp
+*.log
+

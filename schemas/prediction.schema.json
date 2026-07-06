@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/chuo-content-os/prediction.schema.json",
+  "title": "Prediction Metadata",
+  "type": "object",
+  "required": [
+    "content_id",
+    "title",
+    "rubric_version",
+    "predicted_at",
+    "script_path",
+    "script_hash",
+    "bucket",
+    "predicted_center",
+    "reason"
+  ],
+  "properties": {
+    "content_id": {
+      "type": "string",
+      "minLength": 12,
+      "maxLength": 12
+    },
+    "title": {
+      "type": "string"
+    },
+    "rubric_version": {
+      "type": "string"
+    },
+    "predicted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "script_path": {
+      "type": "string"
+    },
+    "script_hash": {
+      "type": "string"
+    },
+    "bucket": {
+      "type": "string"
+    },
+    "predicted_center": {
+      "type": "number"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "scores": {
+      "type": ["object", "null"],
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      }
+    },
+    "published": {
+      "type": "boolean"
+    },
+    "retro_completed": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": true
+}
+

@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/chuo-content-os/state.schema.json",
+  "title": "Chuo Content OS State",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "tool_version",
+    "project_name",
+    "content_form",
+    "retro_window_days",
+    "rubric_version",
+    "calibration_samples",
+    "pending_retros",
+    "initialized_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "tool_version": {
+      "type": "string"
+    },
+    "project_name": {
+      "type": "string"
+    },
+    "content_form": {
+      "type": "string",
+      "enum": ["video", "essay", "short-text", "newsletter", "podcast", "mixed", "other"]
+    },
+    "default_platform": {
+      "type": ["string", "null"]
+    },
+    "timezone": {
+      "type": "string"
+    },
+    "retro_window_days": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "rubric_version": {
+      "type": "string"
+    },
+    "calibration_samples": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "calibration_samples_at_last_rubric_update": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "pending_retros": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "published": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["prediction_file", "platform", "url", "published_at"],
+        "properties": {
+          "prediction_file": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "last_script_file": {
+      "type": ["string", "null"]
+    },
+    "last_prediction_file": {
+      "type": ["string", "null"]
+    },
+    "last_published_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "last_retro_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "consecutive_directional_errors": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["high", "low", "on-target"]
+      }
+    },
+    "initialized_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": true
+}
+

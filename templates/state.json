@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "tool_version": "0.1.0",
+  "project_name": "{{PROJECT_NAME}}",
+  "content_form": "mixed",
+  "default_platform": "{{DEFAULT_PLATFORM}}",
+  "timezone": "{{TIMEZONE}}",
+  "retro_window_days": 3,
+  "rubric_version": "v0",
+  "calibration_samples": 0,
+  "calibration_samples_at_last_rubric_update": 0,
+  "pending_retros": [],
+  "published": [],
+  "last_script_file": null,
+  "last_prediction_file": null,
+  "last_published_at": null,
+  "last_retro_at": null,
+  "consecutive_directional_errors": [],
+  "initialized_at": "{{INITIALIZED_AT}}"
+}
+

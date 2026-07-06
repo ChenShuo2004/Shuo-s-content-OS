@@ -1,0 +1,57 @@
+# Personal app state
+.obsidian/
+
+# Secrets and local config
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Private content workspaces must not live in the public repo
+private/
+private-*/
+my-private-*/
+*-private/
+content-lab/
+raw-materials/
+exports/
+screenshots/
+downloads/
+data/
+
+# Auth/session state
+.auth/
+.auth-*/
+.content-os-secrets.json
+*.cookies
+*session*
+
+# Databases and generated data
+*.db
+*.sqlite
+*.sqlite3
+*.jsonl
+.content-os-cache/
+
+# Python
+__pycache__/
+*.py[cod]
+.python-version
+.venv/
+venv/
+
+# Editors and OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.tmp
+*.log
+

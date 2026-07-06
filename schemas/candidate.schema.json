@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/chuo-content-os/candidate.schema.json",
+  "title": "Content Candidate",
+  "type": "object",
+  "required": ["id", "title", "source", "snapshot_text", "snapshot_at"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 12,
+      "maxLength": 12
+    },
+    "title": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string",
+      "description": "Format: adapter-type:source-name, e.g. manual:notes or trend:hackernews"
+    },
+    "snapshot_text": {
+      "type": "string"
+    },
+    "snapshot_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "url": {
+      "type": ["string", "null"]
+    },
+    "tier": {
+      "type": ["string", "null"],
+      "enum": ["tier1", "tier2", "tier3", "skip", "risky", "done", null]
+    },
+    "read_status": {
+      "type": ["string", "null"],
+      "enum": ["unread", "skimmed", "deep_read", "done", null]
+    },
+    "category": {
+      "type": ["string", "null"]
+    },
+    "composite_score": {
+      "type": ["number", "null"]
+    },
+    "dimension_scores": {
+      "type": ["object", "null"],
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      }
+    },
+    "scored_under_rubric_version": {
+      "type": ["string", "null"]
+    },
+    "predicted_bucket": {
+      "type": ["string", "null"]
+    },
+    "predicted_reason": {
+      "type": ["string", "null"]
+    },
+    "note": {
+      "type": ["string", "null"]
+    },
+    "rejected_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "rejected_reason": {
+      "type": ["string", "null"]
+    }
+  },
+  "additionalProperties": true
+}
+
