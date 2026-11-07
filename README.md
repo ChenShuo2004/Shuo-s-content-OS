@@ -1,3 +1,5 @@
+> **English:** A content operating system linking ideation, creation, publishing, pre-publication forecasts, and post-publication retrospectives.
+
 # Shuo's content OS
 
 面向 AI 创作者、独立创业者和内容型产品团队的内容操作系统。
